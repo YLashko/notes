@@ -33,3 +33,22 @@ sudo yum install MariaDB-server MariaDB-client
 sudo systemctl start mariadb     ->     (Start mariadb)
 sudo mysql     ->     (connect to database)
 sudo mysql -u YL -p blog    ->     (connect as YL to database blog)
+
+### wordpress requirements
+#### MySQL| MariaDB
+add yum repo cfg "/etc/yum.repos.d/Mariadb.repo"
+```bash
+sudo yum install MariaDB-server MariaDB-client
+```
+```bash
+sudo systemctl start mariadb
+```
+```
+create database blog;
+create user "blog" identified by "blog!";
+grant all privileges on blog.* to "blog"@localhost identified by "blog!";
+FLUSH PRIVILEGES;
+
+#### PHP
+
+```
