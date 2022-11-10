@@ -69,7 +69,6 @@ sudo systemctl start httpd
 2. tar -xf wp.tar.gz
 3.```
 sudo mv wordpress/* /var/www/html/
-```
 4. sudo yum install -y php80-php-pecl-mysql
 5. sudo systemctl restart httpd
     @toDo dest: ``var/html/blog``
