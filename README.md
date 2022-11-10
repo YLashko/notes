@@ -96,3 +96,11 @@ sudo mv wordpress/* /var/www/html/
         }
         require_once ABSPATH . 'wp-settings.php';
 ```
+
+
+```
+aws ec2 run-instances --image-id ami-070b208e993b59cea --instance-type t2.micro --key-name StudentKey --security-group-ids sg-0ffb6e7e982571719 --count 1 --user-data file://wp.sh
+```
+```
+ssh ec2-user@id -i id_stundent "bash -s" < wp.sh
+```
