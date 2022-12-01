@@ -123,9 +123,48 @@ setup.yaml
 ```
 ---
 - hosts: web
+  become: yes
   tasks:
     - name: "Hello world"
       shell: |
         echo ":)" > hello_world.txt
+    - name: "install java jre"
+      ansible.builtin.yum:
+        name: https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.rpm
+        state: present
+    - name: "download my app"
+      get_url:
+        url: https://github.com/jkanclerz/e-commerce-pp4/releases/download/v.0.3/application.jar
+        dest: /opt/ecommerce.jar
+    - name: "create user"
+      user:
+        name: ecommerce
+        state: present
+    - name: "start my service"
+      copy:
+        src: files/app.service
+        dest: /etc/systemd/system/ecommerce.service
+    - name: "start my service"
+      systemd:
+        name: ecommerce
+        state:  restarted
+        enabled: yes
+        daemon_reload: yes
 ```
 ansible-playbook -i ~/ansible/hosts.ini ~/ansible/setup.yaml
+
+app.service
+```
+[Unit]
+Description=My nice service
+After=network-online.target
+
+[Service]
+Type=simple
+User=ecommerce
+ExecStart=java -jar /opt/carrental/target/carrental-0.0.1-SNAPSHOT.jar
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
