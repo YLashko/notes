@@ -124,33 +124,41 @@ setup.yaml
 ---
 - hosts: web
   become: yes
+  vars:
+    app_name: ecommerce
   tasks:
-    - name: "Hello world"
-      shell: |
-        echo ":)" > hello_world.txt
-    - name: "install java jre"
-      ansible.builtin.yum:
-        name: https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.rpm
-        state: present
-    - name: "download my app"
-      get_url:
-        url: https://github.com/jkanclerz/e-commerce-pp4/releases/download/v.0.3/application.jar
-        dest: /opt/ecommerce.jar
-    - name: "create user"
-      user:
-        name: ecommerce
-        state: present
-    - name: "start my service"
-      copy:
-        src: files/app.service
-        dest: /etc/systemd/system/ecommerce.service
-    - name: "start my service"
-      systemd:
-        name: ecommerce
-        state:  restarted
-        enabled: yes
-        daemon_reload: yes
+    - include_tasks: tasks/ecommerce.yaml
 ```
+
+files/ecommerce.yaml
+```
+- name: "Hello world"
+  shell: |
+    echo ":)" > hello_world.txt
+- name: "install java jre"
+  ansible.builtin.yum:
+    name: https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.rpm
+    state: present
+- name: "download my app"
+  get_url:
+    url: https://github.com/jkanclerz/e-commerce-pp4/releases/download/v.0.3/application.jar
+    dest: "/opt/{{app_name}}.jar"
+- name: "create user"
+  user:
+    name: "{{app_name}}"
+    state: present
+- name: "start my service"
+  copy:
+    src: files/app.service
+    dest: "/etc/systemd/system/{{app_name}}.service"
+- name: "start my service"
+  systemd:
+    name: "{{app_name}}"
+    state:  restarted
+    enabled: yes
+    daemon_reload: yes
+```
+
 ansible-playbook -i ~/ansible/hosts.ini ~/ansible/setup.yaml
 
 app.service
