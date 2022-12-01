@@ -104,3 +104,28 @@ aws ec2 run-instances --image-id ami-070b208e993b59cea --instance-type t2.micro 
 ```
 ssh ec2-user@id -i id_stundent "bash -s" < wp.sh
 ```
+
+
+
+## ec2
+### sokrates
+eval 'ssh-agent'
+ssh-add ~/id_student
+ansible -m ping -i ~/ansible/hosts.ini web
+
+hosts.ini
+```
+[web]
+18.197.227.246 ansible_user=ec2-user
+```
+
+setup.yaml
+```
+---
+- hosts: web
+  tasks:
+    - name: "Hello world"
+      shell: |
+        echo ":)" > hello_world.txt
+```
+ansible-playbook -i ~/ansible/hosts.ini ~/ansible/setup.yaml
