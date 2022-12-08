@@ -176,3 +176,26 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 ```
+
+sudo yum install docker
+sudo docker run alpine:latest
+sudo docker run -d nginx:latest -p 8080:80
+docker ps -a
+sudo docker rm id
+
+DOCKERFILE
+```
+FROM alpine:latest
+
+RUN apk add openjdk11 curl
+RUN curl -l -o app.jar https://github.com/jkanclerz/e-commerce-pp4/releases/download/v.0.3/application.jar
+
+RUN adduser app --disabled-password
+USER app
+
+EXPOSE 8080
+CMD ["/usr/bin/java", "-jar", "app.jar"]
+```
+
+sudo docker build -t my_ecommerce
+[[[[peaceful_panini]]]]
